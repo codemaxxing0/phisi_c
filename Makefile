@@ -1,14 +1,18 @@
-.PHONY: all, clear
+.PHONY: all clean
 
 CC = gcc
-FLAGS = -Wall -Wextra
-SDLib = `sdl2-config --cflags --libs`
+CFLAGS = -DGLEW_STATIC -Wall -Wextra
+LDFLAGS = $(shell pkg-config sdl2 glew --cflags --libs --static)
 
-all: main.o
+all: main
+
+main: main.o
 	./main.o
 
-main.o : main.c
-	$(CC) main.c -o main.o $(FLAGS) $(SDLib)
+main.o: main.c
+	$(CC) main.c $(CFLAGS) -o main.o $(LDFLAGS) 
+	@echo "Compiled main.c"
 
-clear:
-	rm -rf *.o
+clean:
+	rm -f main main.o
+	@echo "Cleanup complete"
